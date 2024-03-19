@@ -16,7 +16,7 @@ COPY ./requirements.txt ./
 RUN apk add -U --no-cache libstdc++ git && \
     pip install --no-cache-dir -r requirements.txt
 
-COPY ./main.py ./
+COPY ./main.py ./robots.txt ./
 COPY --chmod=744 ./entrypoint.sh /
 
 COPY --from=builder /Stockfish/src/stockfish /usr/local/bin/
