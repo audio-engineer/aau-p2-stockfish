@@ -1,6 +1,6 @@
 services:
   python:
-    image: aau-p2/stockfish
+    image: audio-engineer/aau-p2-stockfish:latest
     build:
       context: .
     volumes:
