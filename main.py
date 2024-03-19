@@ -14,7 +14,7 @@ def robots():
 
 @app.get("/about", response_class=PlainTextResponse)
 def robots():
-    with open("/usr/local/bin/COPYING", encoding="utf-8") as f:
+    with open("/usr/share/doc/stockfish/COPYING", encoding="utf-8") as f:
         return f.read()
 
 
