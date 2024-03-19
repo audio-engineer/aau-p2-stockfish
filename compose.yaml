@@ -1,0 +1,14 @@
+services:
+  python:
+    image: aau-p2/stockfish
+    build:
+      context: .
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - 8000:8000
+  blackd:
+    image: pyfound/black:latest_release
+    command: sh -c "pip install black[d] && blackd --bind-host 0.0.0.0"
+    ports:
+      - 45484:45484
