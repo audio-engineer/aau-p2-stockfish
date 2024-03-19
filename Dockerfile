@@ -16,14 +16,14 @@ COPY ./requirements.txt ./
 RUN apk add -U --no-cache libstdc++ git && \
     pip install --no-cache-dir -r requirements.txt
 
-COPY ./main.py ./robots.txt ./
-COPY --chmod=744 ./entrypoint.sh /
-
 COPY --from=builder /Stockfish/src/stockfish /usr/local/bin/
 COPY --from=builder /Stockfish/Copying.txt /usr/share/doc/stockfish/COPYING
+
+COPY app/ app/
+COPY --chmod=744 ./entrypoint.sh /
 
 EXPOSE 8000
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--reload"]
