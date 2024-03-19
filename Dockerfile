@@ -20,7 +20,7 @@ COPY ./main.py ./robots.txt ./
 COPY --chmod=744 ./entrypoint.sh /
 
 COPY --from=builder /Stockfish/src/stockfish /usr/local/bin/
-COPY --from=builder /Stockfish/Copying.txt /usr/local/bin/COPYING
+COPY --from=builder /Stockfish/Copying.txt /usr/share/doc/stockfish/COPYING
 
 EXPOSE 8000
 

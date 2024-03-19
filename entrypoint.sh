@@ -7,7 +7,7 @@ The full source code for the version of the software used in this project can be
 https://github.com/official-stockfish/Stockfish/tree/sf_16.1
 The following is its license text:\n"
 
-cat /usr/local/bin/COPYING
+cat /usr/share/doc/stockfish/COPYING
 
 printf "\n"
 
