@@ -1,0 +1,6 @@
+[project]
+name = "aau-p2-stockfish"
+requires-python = ">=3.12"
+
+[tool.black]
+line-length = 88
