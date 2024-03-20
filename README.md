@@ -1,4 +1,4 @@
-# AAU P2 Stockfish
+# ChessTeacher Stockfish
 
 This containerized Python application is a REST API
 built using FastAPI that serves [Stockfish](https://stockfishchess.org/) engine responses using
@@ -11,7 +11,7 @@ The full source code for the version of the software used in this project can be
 To build it, run:
 
 ```shell
-docker build -t audio-engineer/aau-p2-stockfish:latest .
+docker build -t audio-engineer/chess-teacher-stockfish:latest .
 ```
 
 ## Local Development
