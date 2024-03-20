@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/aau-p2-stockfish.iml" filepath="$PROJECT_DIR$/.idea/aau-p2-stockfish.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/chess-teacher-stockfish.iml" filepath="$PROJECT_DIR$/.idea/chess-teacher-stockfish.iml" />
     </modules>
   </component>
 </project>
