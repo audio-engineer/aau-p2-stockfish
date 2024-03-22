@@ -11,10 +11,11 @@ FROM python:alpine
 
 WORKDIR /usr/src/app/
 
-COPY ./requirements.txt ./
+COPY ./poetry.lock ./poetry.toml ./pyproject.toml ./
 
 RUN apk add -U --no-cache libstdc++ git && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir poetry && \
+    poetry install
 
 COPY --from=builder /Stockfish/src/stockfish /usr/local/bin/
 COPY --from=builder /Stockfish/Copying.txt /usr/share/doc/stockfish/COPYING
