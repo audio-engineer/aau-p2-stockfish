@@ -9,7 +9,7 @@ RUN make -j build
 
 FROM python:alpine
 
-WORKDIR /usr/src/app/
+WORKDIR /usr/src/chess-teacher-stockfish/
 
 COPY ./poetry.lock ./poetry.toml ./pyproject.toml ./
 

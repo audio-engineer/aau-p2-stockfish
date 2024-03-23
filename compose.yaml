@@ -4,7 +4,7 @@ services:
     build:
       context: .
     volumes:
-      - ./:/usr/src/app/
+      - ./:/usr/src/$COMPOSE_PROJECT_NAME
     ports:
       - 8000:8000
   blackd:
