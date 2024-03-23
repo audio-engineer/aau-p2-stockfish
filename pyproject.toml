@@ -17,6 +17,7 @@ python = "^3.12"
 stockfish = { git = "https://github.com/py-stockfish/stockfish.git", rev = "f2cb530" }
 fastapi = "^0.110.0"
 uvicorn = "^0.29.0"
+inflection = "^0.5.1"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.0.0"
