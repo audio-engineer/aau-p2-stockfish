@@ -19,3 +19,17 @@ docker build -t audio-engineer/chess-teacher-stockfish:latest .
 ```shell
 docker compose up -d
 ```
+
+```shell
+docker exec -it chess-teacher-stockfish-python-1 /bin/sh
+```
+
+To run the linters in the `python` service container:
+
+```shell
+pylint app/ && flake8 && ruff check
+```
+
+```shell
+docker compose down
+```
