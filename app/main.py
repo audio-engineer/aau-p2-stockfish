@@ -21,19 +21,21 @@ stockfish.set_turn_perspective(False)
 DataT = TypeVar("DataT")
 
 
-class DataResponse(BaseModel, Generic[DataT]):
-    """Default top-level member for all response types"""
+class CamelCaseAliasBaseModel(BaseModel):
+    """Extending this class automatically generates camel case aliases"""
 
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+
+class DataResponse(CamelCaseAliasBaseModel, Generic[DataT]):
+    """Default top-level member for all response types"""
 
     data: Optional[DataT] = None
 
 
-class TopMove(BaseModel):
+class TopMove(CamelCaseAliasBaseModel):
     """Represents a top move as defined by the get_top_moves method using the
     verbose setting"""
-
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
     move: str
     centipawn: int | None
@@ -46,15 +48,13 @@ class TopMove(BaseModel):
     wdl: str
 
 
-class TopThreeMovesResponse(BaseModel):
+class TopThreeMovesResponse(CamelCaseAliasBaseModel):
     """Response object containing the top three moves from the start position"""
-
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
     top_three_moves: list[TopMove]
 
 
-class EvaluatePositionRequest(BaseModel):
+class EvaluatePositionRequest(CamelCaseAliasBaseModel):
     """Request object for the /evaluate-position endpoint"""
 
     fen: str
@@ -67,21 +67,17 @@ class AnalyzeMoveRequest(EvaluatePositionRequest):
     move: str
 
 
-class EvaluatePositionResponse(BaseModel):
+class EvaluatePositionResponse(CamelCaseAliasBaseModel):
     """Response object containing the Stockfish evaluation of the current position and
     the win/draw/loss statistics"""
-
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
     evaluation: dict[str, str | int]
     wdl_stats: list[int] | None
 
 
-class AnalyzeMoveResponse(BaseModel):
+class AnalyzeMoveResponse(CamelCaseAliasBaseModel):
     """Response object containing the data whether the move will be a capture, the
     evaluation after the move and the absolute change in evaluation after the move"""
-
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
     is_move_capture: Stockfish.Capture
     evaluation_after_move: float
@@ -135,12 +131,12 @@ async def evaluate_position(
     """Evaluates the current position and returns the result and statistics about
     win/draw/loss for the side to move"""
 
-    fen_position = evaluate_position_request.fen
+    fen = evaluate_position_request.fen
 
-    if not stockfish.is_fen_valid(fen_position):
+    if not stockfish.is_fen_valid(fen):
         raise HTTPException(status_code=400, detail="Invalid FEN")
 
-    stockfish.set_fen_position(fen_position)
+    stockfish.set_fen_position(fen)
 
     return DataResponse[EvaluatePositionResponse](
         data=(
@@ -160,18 +156,21 @@ async def analyze_move(
 ) -> DataResponse[AnalyzeMoveResponse]:
     """Analyzes whether the move will be a capture and the quality of the given move"""
 
-    if not stockfish.is_fen_valid(analyze_move_request.fen):
+    fen = analyze_move_request.fen
+    move = analyze_move_request.move
+
+    if not stockfish.is_fen_valid(fen):
         raise HTTPException(status_code=400, detail="Invalid FEN")
 
-    stockfish.set_fen_position(analyze_move_request.fen)
+    stockfish.set_fen_position(fen)
 
-    if not stockfish.is_move_correct(analyze_move_request.move):
+    if not stockfish.is_move_correct(move):
         raise HTTPException(status_code=400, detail="Invalid move")
 
-    is_move_capture = stockfish.will_move_be_a_capture(analyze_move_request.move)
+    is_move_capture = stockfish.will_move_be_a_capture(move)
 
     evaluation_before_move = stockfish.get_static_eval()
-    stockfish.make_moves_from_current_position([analyze_move_request.move])
+    stockfish.make_moves_from_current_position([move])
     evaluation_after_move = stockfish.get_static_eval()
     absolute_evaluation_change = evaluation_after_move - evaluation_before_move
 
