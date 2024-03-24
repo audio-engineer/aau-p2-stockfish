@@ -14,6 +14,11 @@ To build it, run:
 docker build -t audio-engineer/chess-teacher-stockfish:latest .
 ```
 
+## Documentation
+
+API documentation can be found at [localhost:8000/docs](http://localhost:8000/docs) and
+[localhost:8000/redoc](http://localhost:8000/redoc).
+
 ## Local Development
 
 ```shell
@@ -28,6 +33,12 @@ To run the linters in the `python` service container:
 
 ```shell
 pylint app/ && flake8 && ruff check
+```
+
+To run the testing suite in the `python` service container:
+
+```shell
+pytest --cov=app
 ```
 
 ```shell
