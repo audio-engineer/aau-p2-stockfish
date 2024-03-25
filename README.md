@@ -14,6 +14,8 @@ To build it, run:
 docker build -t audio-engineer/chess-teacher-stockfish:latest .
 ```
 
+Or, if you are using PyCharm, run the `Build` run configuration.
+
 ## Documentation
 
 API documentation can be found at [localhost:8000/docs](http://localhost:8000/docs) and
@@ -32,13 +34,13 @@ docker exec -it chess-teacher-stockfish-python-1 /bin/sh
 To run the linters in the `python` service container:
 
 ```shell
-pylint app/ && flake8 && ruff check
+pylint src/ && flake8 && ruff check
 ```
 
 To run the testing suite in the `python` service container:
 
 ```shell
-pytest --cov=app
+python -m pytest --cov=src.chess_teacher_stockfish
 ```
 
 ```shell
