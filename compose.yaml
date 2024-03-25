@@ -3,6 +3,7 @@ services:
     image: audio-engineer/chess-teacher-stockfish:latest
     build:
       context: .
+      target: development
     volumes:
       - ./:/usr/src/$COMPOSE_PROJECT_NAME
     ports:

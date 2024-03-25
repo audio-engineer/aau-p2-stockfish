@@ -6,7 +6,7 @@ requires-python = ">=3.12"
 line-length = 88
 
 [tool.poetry]
-name = "app"
+name = "chess_teacher_stockfish"
 version = "0.1.0"
 description = "REST API component of ChessTeacher application"
 authors = ["Sebastian Hemmer Bech Mygind", "Simon Woidemann", "Martin Kedmenec"]
@@ -30,3 +30,8 @@ pytest-cov = "^4.1.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]

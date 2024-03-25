@@ -1,7 +1,7 @@
 """Test suite for the main application"""
 
 from fastapi.testclient import TestClient
-from .main import app
+from src.chess_teacher_stockfish.main import app
 
 client = TestClient(app)
 

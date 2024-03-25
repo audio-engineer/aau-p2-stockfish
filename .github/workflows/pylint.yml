@@ -11,4 +11,4 @@ jobs:
           cache: pip
       - run: pip install poetry
       - run: poetry install
-      - run: pylint app/
+      - run: pylint src/
