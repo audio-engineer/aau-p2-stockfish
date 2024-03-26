@@ -31,6 +31,10 @@ docker compose up -d
 docker exec -it chess-teacher-stockfish-python-1 /bin/sh
 ```
 
+```shell
+uvicorn src.chess_teacher_stockfish.main:app --host 0.0.0.0 --reload
+```
+
 To run the linters in the `python` service container:
 
 ```shell

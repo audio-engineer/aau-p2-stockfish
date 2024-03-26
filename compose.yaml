@@ -4,6 +4,7 @@ services:
     build:
       context: .
       target: development
+    tty: true
     volumes:
       - ./:/usr/src/$COMPOSE_PROJECT_NAME
     ports:
