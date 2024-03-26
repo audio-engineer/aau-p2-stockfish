@@ -11,27 +11,24 @@ FROM python:alpine AS development
 
 WORKDIR /usr/src/chess-teacher-stockfish/
 
-COPY ./poetry.lock ./poetry.toml ./pyproject.toml ./
+COPY ./poetry.lock ./poetry.toml ./pyproject.toml ./README.md ./
 
 RUN apk add -U --no-cache libstdc++ git && \
     pip install --no-cache-dir poetry && \
     poetry install
 
 COPY --from=stockfish_builder /Stockfish/src/stockfish /usr/local/bin/
-
-COPY ./src/ ./src/
+COPY --from=stockfish_builder /Stockfish/Copying.txt /usr/share/doc/stockfish/COPYING
 
 EXPOSE 8000
 
-CMD ["uvicorn", "src.chess_teacher_stockfish.main:app", "--host", "0.0.0.0", "--reload"]
-
 FROM development AS production_builder
 
-COPY ./README.md ./
+COPY ./src/ ./README.md ./
 
 RUN poetry build
 
-FROM python:alpine
+FROM python:alpine AS production
 
 COPY --from=stockfish_builder /Stockfish/src/stockfish /usr/local/bin/
 COPY --from=stockfish_builder /Stockfish/Copying.txt /usr/share/doc/stockfish/COPYING
@@ -41,8 +38,8 @@ COPY --chmod=744 ./entrypoint.sh /
 RUN apk add -U --no-cache libstdc++ git && \
     pip install --no-cache-dir *.whl
 
-ENTRYPOINT ["/entrypoint.sh"]
-
 EXPOSE 8000
+
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["uvicorn", "chess_teacher_stockfish.main:app", "--host", "0.0.0.0", "--reload"]
