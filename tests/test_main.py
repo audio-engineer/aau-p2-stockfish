@@ -60,3 +60,12 @@ def test_analyze_move_invalid_move():
 
     assert response.status_code == 400
     assert response.json() == {"detail": "Invalid move"}
+
+
+def test_evaluate_position_invalid_fen():
+    """Test whether an invalid fen raises an error and returns status 400"""
+
+    response = client.post("/evaluate-position", json={"fen": "fen-position"})
+
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Invalid FEN"}
