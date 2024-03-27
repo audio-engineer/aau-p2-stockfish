@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Build" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+  <configuration default="false" name="Build" type="docker-deploy" factoryName="dockerfile" activateToolWindowBeforeRun="false" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
         <option name="imageTag" value="audio-engineer/chess-teacher-stockfish:latest" />
