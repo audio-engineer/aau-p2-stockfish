@@ -18,7 +18,6 @@ RUN apk add -U --no-cache libstdc++ git && \
     poetry install
 
 COPY --from=stockfish_builder /Stockfish/src/stockfish /usr/local/bin/
-COPY --from=stockfish_builder /Stockfish/Copying.txt /usr/share/doc/stockfish/COPYING
 
 EXPOSE 8000
 
@@ -31,15 +30,11 @@ RUN poetry build
 FROM python:alpine AS production
 
 COPY --from=stockfish_builder /Stockfish/src/stockfish /usr/local/bin/
-COPY --from=stockfish_builder /Stockfish/Copying.txt /usr/share/doc/stockfish/COPYING
 COPY --from=production_builder /usr/src/chess-teacher-stockfish/dist/*.whl ./
-COPY --chmod=744 ./entrypoint.sh /
 
 RUN apk add -U --no-cache libstdc++ git && \
     pip install --no-cache-dir *.whl
 
 EXPOSE 8000
-
-ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["uvicorn", "chess_teacher_stockfish.main:app", "--host", "0.0.0.0", "--reload"]
