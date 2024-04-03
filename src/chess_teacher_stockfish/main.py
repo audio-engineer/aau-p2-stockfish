@@ -10,7 +10,19 @@ from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field, ConfigDict, TypeAdapter, ValidationError
 from pydantic.alias_generators import to_camel
 
-app = FastAPI()
+# Creating the FastAPI instance and setting up metadata for the API
+DESCRIPTION = """
+## Software in Use
+- [Stockfish](https://stockfishchess.org/)
+  - [GNU GPLv3](https://opensource.org/license/gpl-3-0)
+- [py-stockfish](https://github.com/py-stockfish/stockfish)
+"""
+
+app = FastAPI(
+    title="ChessTeacher Stockfish API",
+    description=DESCRIPTION,
+    summary="An API for evaluating chess positions and moves using Stockfish",
+)
 
 # Stockfish setup
 stockfish = Stockfish()
@@ -68,11 +80,12 @@ class AnalyzeMoveRequest(EvaluatePositionRequest):
 
 
 class EvaluatePositionResponse(CamelCaseAliasBaseModel):
-    """Response object containing the Stockfish evaluation of the current position and
-    the win/draw/loss statistics"""
+    """Response object containing the Stockfish evaluation of the current position,
+    the win/draw/loss statistics and the top three moves"""
 
     evaluation: dict[str, str | int]
     wdl_stats: list[int] | None
+    top_three_moves: list[TopMove]
 
 
 class AnalyzeMoveResponse(CamelCaseAliasBaseModel):
@@ -82,36 +95,6 @@ class AnalyzeMoveResponse(CamelCaseAliasBaseModel):
     is_move_capture: Stockfish.Capture
     evaluation_after_move: float
     absolute_evaluation_change: float
-
-
-@app.get("/")
-def get_top_three_moves() -> DataResponse[TopThreeMovesResponse]:
-    """Returns the top three moves from the start position"""
-
-    top_three_moves = stockfish.get_top_moves(3, True)
-    top_three_moves_snake_case = [
-        {underscore(key): value for (key, value) in top_move.items()}
-        for top_move in top_three_moves
-    ]
-
-    try:
-        top_three_moves = TypeAdapter(List[TopMove]).validate_python(
-            top_three_moves_snake_case
-        )
-    except ValidationError as error:
-        print(error)
-
-    return DataResponse[TopThreeMovesResponse](
-        data=TopThreeMovesResponse(top_three_moves=top_three_moves)
-    )
-
-
-@app.get("/about", response_class=PlainTextResponse)
-def about():
-    """Opens and prints Stockfish's license page"""
-
-    with open("/usr/share/doc/stockfish/COPYING", encoding="utf-8") as f:
-        return f.read()
 
 
 @app.get("/robots.txt", response_class=PlainTextResponse)
@@ -138,6 +121,19 @@ async def evaluate_position(
 
     stockfish.set_fen_position(fen)
 
+    top_three_moves = stockfish.get_top_moves(3, True)
+    top_three_moves_snake_case = [
+        {underscore(key): value for (key, value) in top_move.items()}
+        for top_move in top_three_moves
+    ]
+
+    try:
+        top_three_moves = TypeAdapter(List[TopMove]).validate_python(
+            top_three_moves_snake_case
+        )
+    except ValidationError as error:
+        raise HTTPException(status_code=400, detail=error) from error
+
     return DataResponse[EvaluatePositionResponse](
         data=(
             EvaluatePositionResponse(
@@ -145,6 +141,7 @@ async def evaluate_position(
                     floor(evaluate_position_request.time_to_analyze)
                 ),
                 wdl_stats=stockfish.get_wdl_stats(),
+                top_three_moves=top_three_moves,
             )
         )
     )
