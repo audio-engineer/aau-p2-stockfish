@@ -1,7 +1,7 @@
 """Module that provides the main entry point for the API"""
 
 import os
-from typing import Generic, TypeVar, Optional, List, Union
+from typing import Generic, TypeVar, Optional, List
 from math import floor
 from inflection import underscore
 from stockfish import Stockfish
@@ -82,14 +82,15 @@ class AnalyzeMoveRequest(EvaluatePositionRequest):
 class EvaluationResult(CamelCaseAliasBaseModel):
     """Class representing the evaluation result from stockfish"""
 
-    value: Union[str, int]
+    type: str
+    value: int
 
 
 class EvaluatePositionResponse(CamelCaseAliasBaseModel):
     """Response object containing the Stockfish evaluation of the current position,
     the win/draw/loss statistics and the top three moves"""
 
-    evaluation: dict[str, EvaluationResult]
+    evaluation: EvaluationResult
     wdl_stats: list[int] | None
     top_three_moves: list[TopMove]
 
