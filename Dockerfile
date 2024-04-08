@@ -37,4 +37,4 @@ RUN apk add -U --no-cache libstdc++ git && \
 
 EXPOSE 8000
 
-CMD ["uvicorn", "chess_teacher_stockfish.main:app", "--host", "0.0.0.0", "--reload"]
+CMD ["uvicorn", "--host", "0.0.0.0", "chess_teacher_stockfish.main:app"]
