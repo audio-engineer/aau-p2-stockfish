@@ -60,12 +60,6 @@ class TopMove(CamelCaseAliasBaseModel):
     wdl: str
 
 
-class TopThreeMovesResponse(CamelCaseAliasBaseModel):
-    """Response object containing the top three moves from the start position"""
-
-    top_three_moves: list[TopMove]
-
-
 class EvaluatePositionRequest(CamelCaseAliasBaseModel):
     """Request object for the /evaluate-position endpoint"""
 
@@ -79,7 +73,7 @@ class AnalyzeMoveRequest(EvaluatePositionRequest):
     move: str
 
 
-class EvaluationResult(CamelCaseAliasBaseModel):
+class Evaluation(CamelCaseAliasBaseModel):
     """Class representing the evaluation result from stockfish"""
 
     type: str
@@ -90,7 +84,7 @@ class EvaluatePositionResponse(CamelCaseAliasBaseModel):
     """Response object containing the Stockfish evaluation of the current position,
     the win/draw/loss statistics and the top three moves"""
 
-    evaluation: EvaluationResult
+    evaluation: Evaluation
     wdl_stats: list[int] | None
     top_three_moves: list[TopMove]
 
