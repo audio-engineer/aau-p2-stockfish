@@ -23,18 +23,20 @@ EXPOSE 8000
 
 FROM development AS production_builder
 
-COPY ./src/ ./README.md ./
-
-RUN poetry build
+RUN poetry export --without-hashes -o requirements.txt
 
 FROM python:alpine AS production
 
+WORKDIR /usr/src/chess-teacher-stockfish/
+
 COPY --from=stockfish_builder /Stockfish/src/stockfish /usr/local/bin/
-COPY --from=production_builder /usr/src/chess-teacher-stockfish/dist/*.whl ./
+COPY --from=production_builder /usr/src/chess-teacher-stockfish/requirements.txt ./
 
 RUN apk add -U --no-cache libstdc++ git && \
-    pip install --no-cache-dir *.whl
+    pip install --no-cache-dir --upgrade -r requirements.txt
+
+COPY ./src/ ./src/
 
 EXPOSE 8000
 
-CMD ["uvicorn", "--host", "0.0.0.0", "chess_teacher_stockfish.main:app"]
+CMD ["fastapi", "run", "--host", "0.0.0.0", "src/chess_teacher_stockfish/main.py"]

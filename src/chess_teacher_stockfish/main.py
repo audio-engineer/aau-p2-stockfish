@@ -10,7 +10,6 @@ from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field, ConfigDict, TypeAdapter, ValidationError
 from pydantic.alias_generators import to_camel
 
-# Creating the FastAPI instance and setting up metadata for the API
 DESCRIPTION = """
 ## Software in Use
 - [Stockfish](https://stockfishchess.org/)
@@ -24,7 +23,6 @@ app = FastAPI(
     summary="An API for evaluating chess positions and moves using Stockfish",
 )
 
-# Stockfish setup
 stockfish = Stockfish()
 stockfish.set_depth(8)
 stockfish.resume_full_strength()
