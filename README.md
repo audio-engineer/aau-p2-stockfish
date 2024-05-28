@@ -32,7 +32,7 @@ docker exec -it chess-teacher-stockfish-python-1 /bin/sh
 ```
 
 ```shell
-uvicorn src.chess_teacher_stockfish.main:app --host 0.0.0.0 --reload
+fastapi dev --host 0.0.0.0 src/chess_teacher_stockfish/main.py
 ```
 
 To run the linters in the `python` service container:
